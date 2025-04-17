@@ -20,7 +20,6 @@ function App() {
           <div className="bg-white shadow-md rounded-lg p-6">
             <FileDrop />
           </div>
-          <div className="bg-white shadow-md rounded-lg p-6">Task List</div>
         </div>
       </div>
       <ReactQueryDevtools />

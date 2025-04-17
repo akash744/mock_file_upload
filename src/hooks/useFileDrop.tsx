@@ -4,12 +4,13 @@ import { cancelTaskEndpoint, submitFileEndpoint } from "@/service/api";
 import { Task } from "@/types/apiTypes";
 import { validateFile } from "@/utils/utils";
 
-export const useFileDrop = () => {
+export const useFileDrop = (
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+) => {
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [fileError, setFileError] = React.useState<{
     [key: string]: boolean | string;
   }>({});
-  const [tasks, setTasks] = React.useState<Task[]>([]);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
 
@@ -23,6 +24,7 @@ export const useFileDrop = () => {
         status: "pending",
         progress: 0,
       };
+      console.log(newTask);
       setTasks((prevTasks) => [newTask, ...prevTasks]);
       setSelectedFile(null);
       setFileError({});
@@ -45,14 +47,15 @@ export const useFileDrop = () => {
     setSelectedFile(file);
     const validationError = validateFile(file);
     setFileError({
-      status: false,
+      status: validationError.status as string,
       message: validationError.message as string,
     });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!selectedFile || fileError) {
+  const handleSubmit = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    if (!selectedFile || fileError.status === false) {
       return;
     }
     console.log("Submitting file:", selectedFile.name);
