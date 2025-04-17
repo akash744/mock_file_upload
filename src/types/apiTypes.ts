@@ -14,3 +14,11 @@ export type MockTask = {
   finalStatus: "success" | "failed";
   isCancelled: boolean;
 };
+
+export type Task = {
+  id: string;
+  fileName: string;
+  status: TaskStatus;
+  progress?: number;
+  error?: string;
+};

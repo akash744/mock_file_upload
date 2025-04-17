@@ -8,10 +8,15 @@ const ALLOWED_MIME_TYPES = [
   "image/webp",
 ];
 
-export const validateFile = (file: File | null): boolean => {
+export const validateFile = (
+  file: File | null
+): { [key: string]: boolean | string } => {
   if (!file) {
     console.log("No file selected");
-    return false;
+    return {
+      status: false,
+      message: "No file selected",
+    };
   }
 
   if (!ALLOWED_MIME_TYPES.some((type) => file.type.startsWith(type))) {
@@ -20,13 +25,24 @@ export const validateFile = (file: File | null): boolean => {
         ", "
       )}) are allowed.`
     );
-    return false;
+    return {
+      status: false,
+      message: `Invalid file type. Only PDF and image files (${ALLOWED_MIME_TYPES.join(
+        ", "
+      )}) are allowed.`,
+    };
   }
 
   if (file.size > MAX_FILE_SIZE_BYTES) {
     console.log(`File is too large. Maximum size is ${MAX_FILE_SIZE_MB}MB.`);
-    return false;
+    return {
+      status: false,
+      message: `File is too large. Maximum size is ${MAX_FILE_SIZE_MB}MB.`,
+    };
   }
 
-  return true;
+  return {
+    status: true,
+    message: "File is ok",
+  };
 };
